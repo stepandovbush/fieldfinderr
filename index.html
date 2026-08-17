@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FieldFinder — career &amp; college planner</title>
+  <link rel="stylesheet" href="style.css?v=6" />
+</head>
+<body>
+
+<!-- ── LANDING PAGE ─────────────────────────────────────────────── -->
+<div id="onboarding" class="onboarding">
+
+  <!-- HERO -->
+  <section class="lp-hero">
+    <nav class="lp-nav">
+      <div class="lp-brand"><span class="brand-mark">◆</span> FieldFinder</div>
+      <span class="lp-badge">AI-powered career exploration</span>
+    </nav>
+    <div class="lp-hero-inner">
+      <p class="lp-eyebrow">For every student, at every stage</p>
+      <h1 class="lp-headline">Find every career, course,<br>and <span class="lp-hl-accent">opportunity in your field.</span></h1>
+      <p class="lp-sub">Type any field — architecture, neuroscience, culinary arts, anything — and AI maps out every career, university, course, and opportunity tailored to where you are in school.</p>
+      <div class="lp-form">
+        <div class="lp-form-group">
+          <label class="lp-label">Field of interest</label>
+          <div class="lp-search-wrap">
+            <input id="obField" class="lp-input" placeholder="e.g. architecture, marine biology, data science, fashion design…" autocomplete="off" />
+            <div id="obSugg" class="ob-sugg" hidden></div>
+          </div>
+          <div class="lp-quick-chips" id="quickChips">
+            <span class="lp-chip" data-field="Medicine & Healthcare">Medicine</span>
+            <span class="lp-chip" data-field="Computer Science">Computer Science</span>
+            <span class="lp-chip" data-field="Law & Legal Studies">Law</span>
+            <span class="lp-chip" data-field="Architecture">Architecture</span>
+            <span class="lp-chip" data-field="Business & Management">Business</span>
+            <span class="lp-chip" data-field="Psychology">Psychology</span>
+            <span class="lp-chip" data-field="Engineering">Engineering</span>
+            <span class="lp-chip" data-field="Environmental Science">Environmental Science</span>
+            <span class="lp-chip" data-field="Artificial Intelligence">AI & Machine Learning</span>
+            <span class="lp-chip" data-field="Film & Media Production">Film & Media</span>
+            <span class="lp-chip" data-field="Nursing & Allied Health">Nursing</span>
+            <span class="lp-chip" data-field="Finance & Economics">Finance</span>
+          </div>
+        </div>
+        <div class="lp-form-group">
+          <label class="lp-label">Your age</label>
+          <div class="lp-age-row">
+            <input id="obAge" type="number" class="lp-age-input" value="16" min="1" />
+            <span id="obStageTag" class="ob-stage-tag">high school</span>
+          </div>
+        </div>
+        <button class="btn btn-grad lp-go-btn" id="obGo">Explore your field →</button>
+        <p class="ob-error" id="obError" hidden>Please enter a field to continue.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ── MAIN APP ─────────────────────────────────────────────────── -->
+<div id="app" class="app" hidden>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="brand"><span class="brand-mark">◆</span> FieldFinder</div>
+    <button class="field-pill" id="fieldPill">
+      <span class="fp-field" id="fpField">—</span>
+      <span class="fp-sep"></span>
+      <span class="fp-change">Change field →</span>
+    </button>
+    <span class="stage-pill" id="stagePill">—</span>
+  </nav>
+
+  <!-- BODY -->
+  <div class="app-body">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div id="sideCareerBox" class="side-career-box" hidden>
+        <div class="scb-eyebrow">Career focus</div>
+        <div class="scb-name" id="sideCareerName"></div>
+        <button class="scb-clear" id="sideCareerClear">✕ Clear</button>
+      </div>
+
+      <nav class="side-nav">
+        <button class="sid active" data-panel="careers">Explore careers</button>
+        <button class="sid" data-panel="courses">Courses to take</button>
+        <button class="sid" data-panel="opportunities">Opportunities</button>
+        <button class="sid" data-panel="universities">Universities</button>
+        <button class="sid" data-panel="salary">Salary & outlook</button>
+        <button class="sid" data-panel="skills">Skills to build</button>
+        <button class="sid" data-panel="scholarships">Scholarships</button>
+        <button class="sid" data-panel="roadmap">Career roadmap</button>
+        <button class="sid" data-panel="resume">Resume scanner</button>
+      </nav>
+
+      <div class="side-stage">
+        <div class="side-stage-label">Your stage</div>
+        <div class="seg" id="stageToggle">
+          <button data-stage="middleschool">Middle</button>
+          <button data-stage="highschool">High</button>
+          <button data-stage="college">College</button>
+          <button data-stage="graduate">Grad</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- PANELS -->
+    <main class="panels">
+
+      <!-- CAREERS -->
+      <section id="panel-careers" class="panel active">
+        <div class="ph"><h2>Careers in <span class="grad" id="panelFieldName"></span></h2>
+        <p class="ph-sub">Click a career to focus all other sections on it.</p></div>
+        <div class="career-grid" id="careerGrid"></div>
+      </section>
+
+      <!-- COURSES -->
+      <section id="panel-courses" class="panel">
+        <div class="ph"><h2>Courses to take</h2>
+        <p class="ph-sub" id="coursesSubtitle">Core, AP, and IB classes recommended for your path.</p></div>
+        <div id="classGroups"></div>
+      </section>
+
+      <!-- OPPORTUNITIES -->
+      <section id="panel-opportunities" class="panel">
+        <div class="ph"><h2>Opportunities <small id="oppStageNote"></small></h2>
+        <p class="ph-sub">Real clubs, competitions, programs, and openings matched to your stage.</p></div>
+        <h3 class="block-title"><span class="dot purple"></span> What you need at this stage</h3>
+        <ul class="need-list" id="needList"></ul>
+        <h3 class="block-title"><span class="dot cyan"></span> Programs &amp; activities</h3>
+        <div id="oppSections"></div>
+        <h3 class="block-title"><span class="dot blue"></span> Recent openings <span class="live">● live</span></h3>
+        <div class="recent-feed" id="recentFeed"></div>
+      </section>
+
+      <!-- UNIVERSITIES (two-column) -->
+      <section id="panel-universities" class="panel">
+        <div class="ph"><h2>University finder</h2>
+        <p class="ph-sub">Enter your basics and hit search. Fill out your full profile on the right for personalised Safety / Match / Reach tags.</p></div>
+        <div class="uni-layout">
+
+          <!-- left: basics + results -->
+          <div class="uni-main">
+            <div class="basics-card">
+              <h3 class="card-title">Your basics</h3>
+              <div class="basics-grid">
+                <label>GPA<input id="uniGpa" placeholder="e.g. 3.7" /></label>
+                <label>SAT<input id="uniSat" type="number" placeholder="400–1600" min="400" max="1600" /></label>
+                <label>ACT<input id="uniAct" type="number" placeholder="1–36" min="1" max="36" /></label>
+                <label>Region<input id="uniRegion" placeholder="global, USA, UK…" /></label>
+                <label>Budget<input id="uniBudget" placeholder="any, under $20k…" /></label>
+                <label>State / Origin<input id="uniLocation" placeholder="e.g. California, International" /></label>
+              </div>
+              <button class="btn btn-grad" id="uniSearch">Find universities →</button>
+            </div>
+            <div id="uniGrid" class="uni-grid"></div>
+          </div>
+
+          <!-- right: full profile builder -->
+          <div class="uni-profile-panel">
+            <h3 class="card-title">Full application profile <span class="opt-badge">Optional · boosts accuracy</span></h3>
+            <p class="profile-desc">The more context you give, the more accurate the Safety / Match / Reach tags and school suggestions become.</p>
+            <div class="pf-fields">
+              <label class="pf">Extracurriculars
+                <textarea id="uniExtras" rows="3" placeholder="e.g. debate captain, robotics founder, 200 hrs tutoring, varsity soccer…"></textarea></label>
+              <label class="pf">Awards &amp; Honors
+                <textarea id="uniAwards" rows="3" placeholder="e.g. National Merit Semifinalist, USACO Silver, Regional Science Fair 1st…"></textarea></label>
+              <label class="pf">Course Rigor
+                <textarea id="uniRigor" rows="2" placeholder="e.g. 9 APs, IB Diploma candidate, dual enrollment…"></textarea></label>
+              <label class="pf">Recommendation Letters
+                <textarea id="uniRecs" rows="2" placeholder="e.g. research scientist (strong), AP Chem teacher, principal…"></textarea></label>
+              <label class="pf">Hooks
+                <textarea id="uniHooks" rows="2" placeholder="e.g. legacy at MIT, recruited D1 athlete, URM, international student…"></textarea></label>
+              <label class="pf">Essay Themes / Ideas
+                <textarea id="uniEssay" rows="2" placeholder="e.g. founding a nonprofit, overcoming a disability, immigrant family story…"></textarea></label>
+              <label class="pf">Class Rank<input id="uniRank" placeholder="e.g. top 5%, valedictorian" /></label>
+              <label class="pf">Intended Major<input id="uniMajor" placeholder="e.g. Pre-Med, Computer Science" /></label>
+              <label class="pf">School Size
+                <select id="uniSize"><option value="">Any size</option><option value="small">Small (&lt;5k)</option><option value="medium">Medium (5–20k)</option><option value="large">Large (20k+)</option></select></label>
+              <label class="pf">School Type
+                <select id="uniType"><option value="">Any type</option><option value="public">Public</option><option value="private">Private</option><option value="liberal arts">Liberal Arts</option></select></label>
+              <label class="pf">Financial Aid Needed
+                <select id="uniAid"><option value="">—</option><option value="yes">Yes, important</option><option value="no">No</option></select></label>
+              <label class="pf">First-Gen Student
+                <select id="uniFirstGen"><option value="">—</option><option value="yes">Yes</option><option value="no">No</option></select></label>
+              <label class="pf">Work Experience<input id="uniWork" placeholder="e.g. 2 summers at hospital, part-time coding tutor" /></label>
+              <label class="pf">Languages<input id="uniLangs" placeholder="e.g. English, Spanish, Mandarin" /></label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SALARY & OUTLOOK -->
+      <section id="panel-salary" class="panel">
+        <div class="ph"><h2>Salary &amp; job outlook</h2>
+        <p class="ph-sub" id="salarySubtitle">Real compensation data and growth projections for your field.</p></div>
+        <div id="salaryGrid" class="salary-grid"></div>
+      </section>
+
+      <!-- SKILLS TO BUILD -->
+      <section id="panel-skills" class="panel">
+        <div class="ph"><h2>Skills to build</h2>
+        <p class="ph-sub" id="skillsSubtitle">Technical skills, tools, soft skills, and certifications that matter most.</p></div>
+        <div id="skillsContent"></div>
+      </section>
+
+      <!-- SCHOLARSHIPS -->
+      <section id="panel-scholarships" class="panel">
+        <div class="ph"><h2>Scholarships &amp; funding</h2>
+        <p class="ph-sub">Real awards for students in your field — amounts, eligibility, and deadlines.</p></div>
+        <div id="scholarshipGrid" class="scholarship-grid"></div>
+      </section>
+
+      <!-- CAREER ROADMAP -->
+      <section id="panel-roadmap" class="panel">
+        <div class="ph"><h2>Career roadmap</h2>
+        <p class="ph-sub" id="roadmapSubtitle">Your step-by-step path from where you are now to where you want to be.</p></div>
+        <div id="roadmapContent" class="roadmap-timeline"></div>
+      </section>
+
+      <!-- RESUME (two-column) -->
+      <section id="panel-resume" class="panel">
+        <div class="ph"><h2>Resume scanner</h2>
+        <p class="ph-sub">Upload your resume — PII is redacted before the AI sees it, then we break down your strengths, weaknesses, and best next steps. Ask follow-up questions on the right.</p></div>
+        <div class="resume-layout">
+
+          <!-- left: upload + results -->
+          <div class="resume-main">
+            <div class="scan-drop" id="scanDrop">
+              <div class="scan-icon"></div>
+              <p class="scan-hint">Drop your resume here or <label for="scanFile" class="scan-link">browse files</label></p>
+              <p class="scan-formats">PDF &nbsp;·&nbsp; JPG / PNG &nbsp;·&nbsp; TXT</p>
+              <input type="file" id="scanFile" accept=".pdf,.txt,.jpg,.jpeg,.png,.webp" hidden />
+            </div>
+            <div id="scanPii" class="scan-pii" hidden>
+              <div><b>PII protection on.</b> SSN, phone, email, address, and passport numbers are stripped before the AI sees your document.</div>
+            </div>
+            <div id="scanResult" hidden>
+              <div class="scan-block" id="scanSummaryBlock"></div>
+              <div class="scan-sw-grid">
+                <div class="scan-block" id="scanStrengthsBlock"></div>
+                <div class="scan-block" id="scanWeaknessesBlock"></div>
+              </div>
+              <div class="scan-block" id="scanSkillsBlock"></div>
+              <div class="scan-block" id="scanGapsBlock"></div>
+              <div class="scan-block" id="scanCareersBlock"></div>
+            </div>
+          </div>
+
+          <!-- right: chatbot -->
+          <div class="chat-panel" id="chatPanel">
+            <div class="chat-top">
+              <div>
+                <b>Ask about your resume</b>
+                <p class="chat-sub">Questions answered using your document as context.</p>
+              </div>
+            </div>
+            <div class="chat-msgs" id="chatMsgs">
+              <div class="chat-bubble bot">Upload your resume and I'll answer anything — how to improve it, how it compares to target careers, what to add next, or how to tailor it for specific schools.</div>
+            </div>
+            <div class="chat-bar">
+              <input id="chatInput" placeholder="Ask anything about your resume…" />
+              <button class="btn btn-grad" id="chatSend">↑</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script src="code.js?v=9"></script>
+</body>
+</html>
